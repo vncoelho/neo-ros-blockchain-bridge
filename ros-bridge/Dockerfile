@@ -1,39 +1,31 @@
-# NEO csharp-nodes network simulator
-FROM mcr.microsoft.com/dotnet/aspnet:6.0.0-focal
-
-LABEL maintainer="NeoResearch"
-LABEL authors="imcoelho,vncoelho"
+FROM ros:noetic-ros-base-focal
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-	    unzip \
 	    screen \
-	    expect \
-	    libleveldb-dev \
 	    wget \
 	    curl \
 	    nano \
 	    iputils-ping \
 	    net-tools \
 	    iptables \
-	    psmisc \
 	    tcpdump \
 	    iproute2 \
+	    ros-noetic-rosbridge-server \
+	    python3-rosdep \
+	    python3-rosinstall \
+	    python3-rosinstall-generator \
+	    python3-wstool \
+	    build-essential \	    
     && rm -rf /var/lib/apt/lists/*
 
-# Add the neo-cli package
-ADD ./neo-cli.zip /opt/neo-cli.zip
 
-# Extract and prepare four consensus nodes
-RUN unzip -q -d /opt/node /opt/neo-cli.zip
+RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
+  
+RUN mkdir -p ~/catkin_ws/src
+ADD simple_pub_blockchain.py /
 
-#Script used to start nodes on screen sessions
-ADD ./scripts/run.sh /opt/
+ADD ros_talker.sh /
+ADD websocket.launch /    
+ADD run.sh /  
 
-#Script used to simple start RPC
-ADD ./scripts/start_node.sh /opt/
-
-#Script used to modify neo-cli protocol characteristcs - currently, change secondsperblock
-#ADD ./scripts/updateConsensusCharacteristics.sh /opt/
-
-# On docker run, start the consensus nodes
-CMD ["/bin/bash", "/opt/run.sh"]
+CMD ["/bin/bash", "/run.sh"]

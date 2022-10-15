@@ -1,0 +1,5 @@
+<launch>
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"/>
+  <node pkg="simple_pub_blockchain" name="simple_pub_blockchain.py" type="simple_pub_blockchain.py" output="screen"> 
+  </node>
+</launch>

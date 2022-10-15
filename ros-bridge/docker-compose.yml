@@ -1,0 +1,8 @@
+version: "3.7"
+
+services:
+  ros-bridge-running:
+    image: ros-bridge
+    container_name: "ros-bridge-running"
+    ports:
+      - "9090:9090"
