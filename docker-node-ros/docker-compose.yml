@@ -1,0 +1,37 @@
+version: "3.7"
+networks:
+  network-ros-host:
+    name: ros-network
+    attachable: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.0.0/16
+          ip_range: 172.18.5.0/24
+          gateway: 172.18.0.1
+  docker-compose-eco-network_private_net:
+    external: true
+
+services:
+  ros-services-express-running:
+    image: docker-express-node
+    container_name: "ros-services-express-running"
+    ports:
+      - "9091:9091"
+      - "9092:9092"
+    environment:
+      - DOOR_ECOSERVICES=9091
+    volumes:
+      - ./appRosServices.js:/opt/appRosServices.js
+      - ./run.sh:/opt/run.sh
+      - ./key.pem:/opt/key.pem
+      - ./cert.pem:/opt/cert.pem
+      - ./selfsigned.key:/opt/selfsigned.key
+      - ./selfsigned.crt:/opt/selfsigned.crt
+    command: tail -F anything
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - network-ros-host
+      - docker-compose-eco-network_private_net
+
