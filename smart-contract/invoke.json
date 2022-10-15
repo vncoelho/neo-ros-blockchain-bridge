@@ -1,0 +1,29 @@
+{
+  "jsonrpc": "2.0",
+  "method": "invokefunction",
+  "params": [
+    "0xf0504db806f40c5b0c40555c7a6a74880c2615cf",
+    "doRequest",
+    [
+        {
+        "type": "String",
+        "value": "$.*"
+        },
+        {
+        "type": "String",
+        "value": "https://api.github.com/users/superboyiii"
+        },
+        {
+        "type": "Integer",
+        "value": "100000000"
+        }
+    ],
+    [
+      {
+        "account": "NdS2cQVWxzxDWHLz8ivrcRfkeSAx2AcorA",
+        "scopes": "Global"
+      }
+    ]
+  ],
+  "id": 3
+}

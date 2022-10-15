@@ -31,14 +31,6 @@ app.use(function(req, res, next) {
 });
 */
 
-/*
-var key = fs.readFileSync('/opt/selfsigned.key');
-var cert = fs.readFileSync('/opt/selfsigned.crt');
-var options = {
-  key: key,
-  cert: cert
-};*/
-
 var httpServer = http.createServer(app);
 
 var door = 9091;
@@ -52,21 +44,11 @@ httpServer.listen(door || process.env.PORT, (err) => {
     console.log('ROS services RPC server is up')
 })
 
-/*
 var doorHttps = 9092;
-var privateKey  = fs.readFileSync('/opt/selfsigned.key', 'utf8');
-var certificate = fs.readFileSync('/opt/selfsigned.crt', 'utf8');
+var privateKey  = fs.readFileSync('/opt/server.key', 'utf8');
+var certificate = fs.readFileSync('/opt/server.crt', 'utf8');
 var credentials = {key: privateKey, cert: certificate};
-//var httpsServer = https.createServer(credentials, app);
-//httpsServer.listen(doorHttps);
-
-const options = {
-  key: fs.readFileSync('/opt/key.pem'),
-  cert: fs.readFileSync('/opt/cert.pem'),
-};
-
-https.createServer(options, app).listen(doorHttps);
-*/
+https.createServer(credentials, app).listen(doorHttps);
 
 app.get('/', (req, res) => {
     console.log("Welcome to our ROS RPC Service");

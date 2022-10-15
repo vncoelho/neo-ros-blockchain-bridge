@@ -1,0 +1,36 @@
+version: "3.7"
+
+networks:
+  ros-rpc:
+    driver: bridge
+  docker-compose-eco-network_private_net:
+    external: true
+            
+services:
+  ros-bridge-running:
+    image: ros-bridge
+    container_name: "ros-bridge-running"
+    ports:
+      - "9090:9090"
+    networks:
+      - ros-rpc
+            
+  ros-services-express-running:
+    image: docker-express-node
+    container_name: "ros-services-express-running"
+    ports:
+      - "9091:9091"
+      - "9092:9092"
+    environment:
+      - DOOR_ECOSERVICES=9091
+    volumes:
+      - ./appRosServices.js:/opt/appRosServices.js
+      - ./run-appRpc.sh:/opt/run-appRpc.sh
+      - ./certificates/server.key:/opt/server.key
+      - ./certificates/server.crt:/opt/server.crt
+    command: /opt/run-appRpc.sh
+    depends_on:
+      - ros-bridge-running    
+    networks:
+      - ros-rpc
+      - docker-compose-eco-network_private_net      
