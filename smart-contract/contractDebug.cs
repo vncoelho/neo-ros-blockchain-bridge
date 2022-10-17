@@ -16,7 +16,7 @@ namespace OracleDemo
     
     public class OracleDemo : SmartContract
     {
-        public static void DoRequest()
+        public static void DoRequestFixed()
         {
             string url = "https://ros-services-express-running:9092/robot"; // the content is  { "value": "hello world" }
             string filter = "$.value";  // JSONPath format https://github.com/atifaziz/JSONPath
@@ -27,7 +27,8 @@ namespace OracleDemo
             Oracle.Request(url, filter, callback, userdata, gasForResponse);
         }
 
-        public static void DoRequestWithParameters(string filter, string url, long gasForResponse)
+	// , long gasForResponse
+        public static void DoRequestWithParameters(string filter, string url)
         {
             object[] number = {3};
             Runtime.Notify("HI 1",number);
@@ -35,10 +36,12 @@ namespace OracleDemo
             Runtime.Log("Inside DoRequest");
             string callback = "callback"; // callback method
             Runtime.Notify("HI 2",number);
+            
+            long gasForResponse = Oracle.MinimumResponseFee;
             Oracle.Request(url, filter, callback, userdata, gasForResponse);
         }
         
-        public static string MyMethod()
+        public static string GetStorage()
         {
             return Storage.Get(Storage.CurrentContext, "sensor");
         }
@@ -57,7 +60,7 @@ namespace OracleDemo
             object[] arr = (object[])ret;
             string value = (string)arr[0];
 
-	        Storage.Put(Storage.CurrentContext, "00",value);
+	        Storage.Put(Storage.CurrentContext, "sensor",value);
 	        object[] arrValue = {value};
 	        Runtime.Notify("HI value",arrValue);
             Runtime.Log("response value: " + value);
