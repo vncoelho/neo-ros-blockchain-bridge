@@ -6,7 +6,6 @@ var bodyParser = require('body-parser'); // pull information from HTML POST (exp
 var app = express();
 var cors = require('cors');
 var fs = require('fs');
-var ROSLIB = require('roslib');
 
 app.use(logger('dev')); // log every request to the console
 app.use(bodyParser.urlencoded({ // parse application/x-www-form-urlencoded
@@ -20,16 +19,6 @@ app.use(bodyParser.json({
 })); // parse application/vnd.api+json as json
 
 app.use(cors())
-
-/*
-app.use(function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.setHeader('Access-Control-Allow-Credentials', true);
-    next();
-});
-*/
 
 var httpServer = http.createServer(app);
 
@@ -64,39 +53,18 @@ app.get('/', (req, res) => {
     res.send(obj);
 });
 
-var ros = new ROSLIB.Ros({
-  url : 'ws://ros-bridge-running:9090'
-});
-
-ros.on('connection', function() {
-  console.log("Connected");
-});
-
-ros.on('error', function(error) {
-  console.log(error);
-});
-
-ros.on('close', function() {
-  console.log("Closed");
-});
-
-var txt_listener = new ROSLIB.Topic({
-  ros : ros,
-  name : '/txt_msg',
-  messageType : 'std_msgs/String'
-});
-
-txt_listener.subscribe(function(m) {
-  console.log("subscribing");
-  console.log(m.data);
-  lastValue = m.data;
-});
-
 var lastValue = "empty";
 
 app.get('/robot', function(req, res) {
+  var arrMethods = {};
+  arrMethods["value"] = lastValue;
+  res.send(arrMethods);
+});
+
+app.get('/setRobot/:sensorValue', function(req, res) {
+    lastValue = req.params.sensorValue;
     var arrMethods = {};
-    arrMethods["value"] = lastValue;
+    arrMethods["result"] = true
     res.send(arrMethods);
 });
 

@@ -1,0 +1,15 @@
+version: "3.7"
+        
+services:            
+  starlink-services-express-running:
+    image: docker-express-node
+    container_name: "starlink-services-express-running"
+    ports:
+      - "9092:9092"
+      - "9091:9091"
+    volumes:
+      - ./appRosServices.js:/opt/appRosServices.js
+      - ./run-appRpc.sh:/opt/run-appRpc.sh
+      - ./certificates/server.key:/opt/server.key
+      - ./certificates/server.crt:/opt/server.crt      
+    command: /opt/run-appRpc.sh
