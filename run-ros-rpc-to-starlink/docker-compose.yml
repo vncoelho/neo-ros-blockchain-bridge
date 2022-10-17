@@ -1,0 +1,26 @@
+version: "3.7"
+
+networks:
+  ros-rpc:
+    driver: bridge
+        
+services:
+  ros-bridge-running:
+    image: ros-bridge
+    container_name: "ros-bridge-running"
+    ports:
+      - "9090:9090"
+    networks:
+      - ros-rpc
+            
+  ros-starlink-services-express-running:
+    image: docker-express-node
+    container_name: "ros-starlink-services-express-running"
+    volumes:
+      - ./appStarlinkBridgeServices.js:/opt/appStarlinkBridgeServices.js
+      - ./run-appRpc.sh:/opt/run-appRpc.sh
+    command: /opt/run-appRpc.sh
+    depends_on:
+      - ros-bridge-running    
+    networks:
+      - ros-rpc  
