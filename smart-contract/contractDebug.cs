@@ -7,17 +7,17 @@ using Neo.SmartContract.Framework.Services;
 using System;
 using System.Numerics;
 
-namespace OracleDemo
+namespace RosStarlinkRegistering
 {
     [ManifestExtra("Author", "Neo")]
     [ManifestExtra("Email", "dev@neo.org")]
-    [ManifestExtra("Description", "This is an oracle example")]
+    [ManifestExtra("Description", "This is an oracle for registering ROS data published from a starlink connected robot")]
     
-    
-    public class OracleDemo : SmartContract
+    public class RosStarlinkRegistering : SmartContract
     {
         public static void DoRequestFixed()
         {
+            //https://147.182.203.142:9092/robot
             string url = "https://ros-services-express-running:9092/robot"; // the content is  { "value": "hello world" }
             string filter = "$.value";  // JSONPath format https://github.com/atifaziz/JSONPath
             string callback = "callback"; // callback method
@@ -54,8 +54,7 @@ namespace OracleDemo
             Runtime.Notify("HI C2",number);
             if (code != OracleResponseCode.Success) throw new Exception("Oracle response failure with code " + (byte)code);
             
-            Runtime.Notify("HI C3",number);
-            
+            Runtime.Notify("HI C3",number);            
             object ret = StdLib.JsonDeserialize(result); // [ "hello world" ]
             object[] arr = (object[])ret;
             string value = (string)arr[0];
