@@ -1,4 +1,4 @@
 #!/bin/bash
 
-sleep 5
+sleep 10
 node appRosServices.js

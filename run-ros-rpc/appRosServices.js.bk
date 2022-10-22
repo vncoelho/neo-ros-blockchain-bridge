@@ -89,40 +89,16 @@ var txt_listener = new ROSLIB.Topic({
 txt_listener.subscribe(function(m) {
   console.log("subscribing");
   console.log(m.data);
-  var localJSON = JSON.parse(m.data);
-  //lastValue = m.data;
-  lastValues.push({"value":localJSON.value, "timestamp":localJSON.timestamp});
-  if(lastValues.length > KEEP_MAX)
-     lastValues = lastValues.slice(1);
+  lastValue = m.data;
 });
 
-// after this value, will drop first (FIFO behavior)
-var KEEP_MAX = 10000;
-var lastValues = [];
+var lastValue = "empty";
 
-app.get('/robot/:target_time', function(req, res) {
-    var target_time = req.params.target_time;
-    var get_value = -1;
-    var get_timestamp = 0; 
-    // defaults to first value, if existent  
-    if(lastValues.length > 0) {
-      get_value = lastValues[0].value;
-      get_timestamp = lastValues[0].timestamp;
-    }
-    // assume values are naturally sorted by timestamp on lastValues
-    for(var i =0; i<lastValues.length; i++)
-       if(lastValues[i].timestamp <= target_time) {
-         get_timestamp = lastValues[i].timestamp;
-         get_value = lastValues[i].value;
-       }
-    // present latest value available
+app.get('/robot', function(req, res) {
     var arrMethods = {};
-    arrMethods["value"] = get_value;
-    // arrMethods["value"] = `${get_value}`;
+    arrMethods["value"] = lastValue;
     res.send(arrMethods);
 });
-
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
