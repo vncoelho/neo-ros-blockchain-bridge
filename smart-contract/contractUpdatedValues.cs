@@ -49,6 +49,15 @@ namespace RosStarlinkRegistering
             Runtime.Notify(s, number);
             return s;
         }
+        
+        public static void Reset(int nonce)
+        {
+            BigInteger bigzero = BigInteger.Zero;
+            Storage.Put(Storage.CurrentContext, "val0", nonce);
+            Storage.Put(Storage.CurrentContext, "val1", nonce);
+            Storage.Put(Storage.CurrentContext, "val2", nonce);
+            Storage.Put(Storage.CurrentContext, "bigdiff", bigzero);
+        }
 
         public static void Callback(string url, string userdata, OracleResponseCode code, string result)
         {
