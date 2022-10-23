@@ -47,6 +47,7 @@ OUT_HEX=`echo $STORE2 | base64 --decode | xxd -p`
 plusZero=`echo -n "${OUT_HEX}00"`
 bigEndianValue=`echo $plusZero|fold -w2|tac|tr -d "\n"`
 intValue=`perl -le 'print hex("'$bigEndianValue'");'`
+intBigDiff=$intValue
 echo "intValue=$intValue"
 echo ""
 
@@ -70,6 +71,7 @@ OUT_HEX=`echo $STORE2 | base64 --decode | xxd -p`
 plusZero=`echo -n "${OUT_HEX}00"`
 bigEndianValue=`echo $plusZero|fold -w2|tac|tr -d "\n"`
 intValue=`perl -le 'print hex("'$bigEndianValue'");'`
+intVal0=$intValue
 echo "intValue=$intValue"
 echo ""
 
@@ -93,6 +95,7 @@ OUT_HEX=`echo $STORE2 | base64 --decode | xxd -p`
 plusZero=`echo -n "${OUT_HEX}00"`
 bigEndianValue=`echo $plusZero|fold -w2|tac|tr -d "\n"`
 intValue=`perl -le 'print hex("'$bigEndianValue'");'`
+intVal1=$intValue
 echo "intValue=$intValue"
 echo ""
 
@@ -115,9 +118,14 @@ OUT_HEX=`echo $STORE2 | base64 --decode | xxd -p`
 plusZero=`echo -n "${OUT_HEX}00"`
 bigEndianValue=`echo $plusZero|fold -w2|tac|tr -d "\n"`
 intValue=`perl -le 'print hex("'$bigEndianValue'");'`
+intVal2=$intValue
 echo "intValue=$intValue"
 echo ""
 
+# STORE the log in file
+mydate=`date +"%s.%N"`
+time_ms=`echo '('${mydate} ' * 1000)/1' | bc`
+echo -e "$time_ms\t$intVal0\t$intVal1\t$intVal2\t$intBigDiff"  >> mylog.txt
 
 
 echo "FINISHED!"

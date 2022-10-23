@@ -11,14 +11,14 @@ namespace RosStarlinkRegistering
 {
     [ManifestExtra("Author", "Neo")]
     [ManifestExtra("Email", "dev@neo.org")]
-    [ManifestExtra("Description", "This is an oracle for registering ROS data published from a starlink connected robot")]
+    [ManifestExtra("Description", "This is an oracle for registering ROS data published from a starlink connected robxxxxot")]
     
     public class RosStarlinkRegistering : SmartContract
     {
         public static void DoRequestFixed()
         {
             //https://147.182.203.142:9092/robot
-            string url = "https://ros-services-express-running:9092/robot"; // the content is  { "value": "hello world" }
+            string url = "https://ros-services-express-running:9092/robot111"; // the content is  { "value": "hello world" }
             string filter = "$.value";  // JSONPath format https://github.com/atifaziz/JSONPath
             string callback = "callback"; // callback method
             object userdata = "userdata"; // arbitrary type
@@ -57,6 +57,8 @@ namespace RosStarlinkRegistering
             Storage.Put(Storage.CurrentContext, "val1", nonce);
             Storage.Put(Storage.CurrentContext, "val2", nonce);
             Storage.Put(Storage.CurrentContext, "bigdiff", bigzero);
+            BigInteger big3 = 3;
+            Storage.Put(Storage.CurrentContext, "count", big3);
         }
 
         public static void Callback(string url, string userdata, OracleResponseCode code, string result)
@@ -94,14 +96,20 @@ namespace RosStarlinkRegistering
 	        Storage.Put(Storage.CurrentContext, "val0",val1);
 	        Storage.Put(Storage.CurrentContext, "val1",val2);
 	        Storage.Put(Storage.CurrentContext, "val2",value);
-	        // CALCULATE and store the biggest difference
-	        BigInteger diff = value - val2;
-	        BigInteger bigdiff = (BigInteger)Storage.Get(Storage.CurrentContext, "bigdiff");
-	        if(diff > bigdiff) {
-	           // new big difference
-	           Storage.Put(Storage.CurrentContext, "bigdiff",diff);
-	           object[] arrValue0 = {diff};
-	           Runtime.Notify("UPDATED bigdiff",arrValue0);
+	        
+	        BigInteger count = (BigInteger)Storage.Get(Storage.CurrentContext, "count");
+	        if(count == 0) {
+    	        // CALCULATE and store the biggest difference
+    	        BigInteger diff = value - val2;
+    	        BigInteger bigdiff = (BigInteger)Storage.Get(Storage.CurrentContext, "bigdiff");
+    	        if(diff > bigdiff) {
+    	           // new big difference
+    	           Storage.Put(Storage.CurrentContext, "bigdiff",diff);
+    	           object[] arrValue0 = {diff};
+    	           Runtime.Notify("UPDATED bigdiff",arrValue0);
+    	        }
+	        } else {
+	            Storage.Put(Storage.CurrentContext, "count",count-1);
 	        }
 	        //
 	        
