@@ -3,7 +3,7 @@ var CONTRACT_HASH = "0xd511d45e90187061640a7c7c885f10c44d6972af";
 var sampleVar;
 
 function loopFunc(){
-  sampleVar = setTimeout(txFunc, 500);
+  sampleVar = setTimeout(txFunc, 100);
 }
 
 
@@ -19,7 +19,7 @@ function txFunc(){
     invokeFunctionWithParams(CONTRACT_HASH,"doRequestWithParameters", finalParams, true);
     //
     console.log("again, and again, and again!");
-    sampleVar = setTimeout(txFunc, 500);
+    sampleVar = setTimeout(txFunc, 100);
 }
 
 loopFunc();
