@@ -53,16 +53,37 @@ app.get('/', (req, res) => {
     res.send(obj);
 });
 
-var lastValue = "empty";
+var KEEP_MAX = 10000;
+var lastValues = [];
 
-app.get('/robot', function(req, res) {
-  var arrMethods = {};
-  arrMethods["value"] = lastValue;
-  res.send(arrMethods);
+app.get('/robot/:target_time', function(req, res) {
+    var target_time = req.params.target_time;
+    var get_value = -1;
+    var get_timestamp = 0; 
+    // defaults to first value, if existent  
+    if(lastValues.length > 0) {
+      get_value = lastValues[0].value;
+      get_timestamp = lastValues[0].timestamp;
+    }
+    // assume values are naturally sorted by timestamp on lastValues
+    for(var i =0; i<lastValues.length; i++)
+       if(lastValues[i].timestamp <= target_time) {
+         get_timestamp = lastValues[i].timestamp;
+         get_value = lastValues[i].value;
+       }
+    // present latest value available
+    var arrMethods = {};
+    arrMethods["value"] = get_value;
+    // arrMethods["value"] = `${get_value}`;
+    res.send(arrMethods);
 });
 
 app.get('/setRobot/:sensorValue', function(req, res) {
-    lastValue = req.params.sensorValue;
+    var localJSON = JSON.parse(req.params.sensorValue);
+    lastValues.push({"value":localJSON.value, "timestamp":localJSON.timestamp});
+    if(lastValues.length > KEEP_MAX)
+    	lastValues = lastValues.slice(1);    
+    
     var arrMethods = {};
     arrMethods["result"] = true
     res.send(arrMethods);

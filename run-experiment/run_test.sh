@@ -25,7 +25,7 @@ jq --version # echo "we need command 'jq' to parse json structure"
 WELCOME=`curl -s "$REMOTE_SERVER" | jq '.welcome'`
 echo "$WELCOME"
 
-contrato="0x0c1172e45c1e8882edd61a2b79fb3fe185db0e66"
+contrato="0xd511d45e90187061640a7c7c885f10c44d6972af"
 #
 store_key="bigdiff"
 store_bigdiff=`echo -n "$store_key" | xxd -p | xxd -r -p | base64`
