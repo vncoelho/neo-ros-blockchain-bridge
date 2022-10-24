@@ -6,10 +6,16 @@ function loopFunc(){
   sampleVar = setTimeout(txFunc, 500);
 }
 
+
+urlPrivateNetwork = "https://ros-services-express-running:9092/robot/"
+urlStarlinkBridge = "https://147.182.203.142:9092/robot/"
+
+//urlPrivateNetwork+Date.now()
+
 function txFunc(){
     var finalParams = [];
     finalParams.push({type: "String", value: "$.value"});
-    finalParams.push({type: "String", value: "https://ros-services-express-running:9092/robot/"+Date.now()});
+    finalParams.push({type: "String", value: urlStarlinkBridge+Date.now()});
     invokeFunctionWithParams(CONTRACT_HASH,"doRequestWithParameters", finalParams, true);
     //
     console.log("again, and again, and again!");
